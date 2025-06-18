@@ -18,13 +18,22 @@ class Database {
     public function getConnection() {
         $this->conn = null;
         try {
-            $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8mb4";
+            // First, connect to the MySQL server without specifying a database
+            $dsn = "mysql:host=" . $this->host . ";charset=utf8mb4";
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
+
+            // Create the database if it doesn't exist
+            $this->conn->exec("CREATE DATABASE IF NOT EXISTS " . $this->db_name);
+
+            // Switch to the created database
+            $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8mb4";
+            $this->conn = new PDO($dsn, $this->username, $this->password, $options);
+
             return $this->conn;
         } catch(PDOException $exception) {
             error_log("Database connection error: " . $exception->getMessage());

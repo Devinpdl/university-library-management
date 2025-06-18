@@ -2,7 +2,25 @@
 require_once __DIR__ . '/../../classes/Auth.php';
 $auth = new Auth();
 $user = $auth->getCurrentUser();
+if (!$auth->isLoggedIn()) {
+    header('Location: /login.php');
+    exit;
+}
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
 
 <div class="top-header">
     <div class="container-fluid">
@@ -30,3 +48,8 @@ $user = $auth->getCurrentUser();
         </div>
     </div>
 </div>
+
+<script src="/assets/js/navigation.js"></script>
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

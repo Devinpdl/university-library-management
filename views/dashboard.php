@@ -2,9 +2,14 @@
 require_once __DIR__ . '/../classes/Report.php';
 $report = new Report();
 $stats = $report->getDashboardStats();
+
+// Include header and sidebar
+include_once __DIR__ . '/partials/header.php';
+include_once __DIR__ . '/partials/sidebar.php';
 ?>
 
-<div id="dashboardContent" class="page-content">
+<div class="main-content">
+    <div id="dashboardContent" class="page-content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3 mb-4">
@@ -105,8 +110,27 @@ $stats = $report->getDashboardStats();
                                 <thead>
                                     <tr>
                                         <th>Item</th>
-                                        <th>Author</th>
-                                        <th>Category</th>
+                                        <th>Times Issued</th>
+                                        <th>Available</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="popularItemsTable">
+                                    <?php foreach ($stats['popular_books'] as $book): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($book['title']); ?></td>
+                                        <td><?php echo htmlspecialchars($book['times_issued']); ?></td>
+                                        <td><?php echo $book['available'] ? 'Yes' : 'No'; ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                                         <th>Issues</th>
                                     </tr>
                                 </thead>

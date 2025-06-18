@@ -25,4 +25,3 @@ try {
     echo "<p style='color: red;'>Connection error: " . $e->getMessage() . "</p>";
     echo "<p>Please make sure your database server is running and the database credentials are correct in config/database.php</p>";
 }
-?>

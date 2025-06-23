@@ -1,3 +1,10 @@
+// App initialization
+$(document).ready(function() {
+    // Initialize Bootstrap components
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover();
+});
+
 (function loadFines() {
     const search = $('#fineSearch').val();
     const page = $('#finesPagination .page-item.active').data('page') || 1;

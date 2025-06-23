@@ -9,6 +9,18 @@ class Migration {
     }
     
     public function createTables() {
+        // Disable foreign key checks
+        $this->pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
+        
+        // Drop existing tables in correct order
+        $tables = ['reservations', 'issues', 'books', 'publishers', 'authors', 'categories', 'users', 'settings'];
+        foreach ($tables as $table) {
+            $this->pdo->exec("DROP TABLE IF EXISTS $table");
+        }
+        
+        // Re-enable foreign key checks
+        $this->pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+
         $sql = "
         CREATE DATABASE IF NOT EXISTS library_db;
         USE library_db;

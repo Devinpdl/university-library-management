@@ -1,71 +1,93 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle sidebar menu navigation
-    const sidebarMenuItems = document.querySelectorAll('.sidebar-menu-item');
-    sidebarMenuItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            
-            // Remove active class from all menu items
-            sidebarMenuItems.forEach(menuItem => menuItem.classList.remove('active'));
-            
-            // Add active class to clicked menu item
-            this.classList.add('active');
-            
-            // Update page title
-            const pageTitle = document.getElementById('pageTitle');
-            if (pageTitle) {
-                pageTitle.textContent = page.charAt(0).toUpperCase() + page.slice(1);
-            }
-            
-            // Load the page content
-            window.location.href = `views/${page}.php`;
-        });
-    });
-
-    // Handle mobile sidebar toggle
     const sidebarToggle = document.getElementById('sidebarToggle');
-    if (sidebarToggle) {
-        sidebarToggle.addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar) {
-                sidebar.classList.toggle('active');
+    const sidebar = document.getElementById('sidebar');
+    const menuItems = document.querySelectorAll('.sidebar-menu-item');
+    const userDropdown = document.getElementById('userDropdown');
+    const themeToggle = document.getElementById('themeToggle');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    // Initialize Bootstrap dropdowns
+    if (typeof $ !== 'undefined') {
+        // Direct initialization of dropdown without delay
+        $('.dropdown-toggle').dropdown();
+        
+        // Force manual initialization for user dropdown
+        $('#userDropdown').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const parent = $(this).parent();
+            const menu = parent.find('.dropdown-menu');
+            
+            // Toggle dropdown visibility
+            $('.dropdown-menu.show').not(menu).removeClass('show');
+            $('.dropdown.show').not(parent).removeClass('show');
+            
+            parent.toggleClass('show');
+            menu.toggleClass('show');
+        });
+        
+        // Close dropdown when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.dropdown').length) {
+                $('.dropdown-menu.show').removeClass('show');
+                $('.dropdown.show').removeClass('show');
             }
         });
     }
+    
+    // Update page title based on active menu
+    const activeMenu = document.querySelector('.sidebar-menu-item.active');
+    if (activeMenu) {
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle) {
+            pageTitle.textContent = activeMenu.textContent.trim();
+        }
+    }
+    
+    // Sidebar toggle functionality
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            sidebar.classList.toggle('show');
+        });
 
-    // Handle logout
-    const logoutBtn = document.getElementById('logoutBtn');
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !sidebarToggle.contains(e.target) && 
+                sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('show');
+            }
+        });
+    }
+    
+    // Theme toggle functionality
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('dark-theme', document.body.classList.contains('dark-theme'));
+        });
+        
+        // Apply saved theme preference
+        if (localStorage.getItem('dark-theme') === 'true') {
+            document.body.classList.add('dark-theme');
+        }
+    }
+    
+    // Logout functionality
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            // Send logout request
-            fetch('api/auth.php?action=logout', {
-                method: 'POST',
-                credentials: 'same-origin'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = 'login.php';
-                } else {
-                    alert('Logout failed. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Logout error:', error);
-                alert('An error occurred during logout. Please try again.');
-            });
-        });
-    }
-
-    // Handle profile link
-    const profileLink = document.querySelector('[data-page="profile"]');
-    if (profileLink) {
-        profileLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = 'views/profile.php';
+            window.location.href = '/university-library-management/api/auth.php?action=logout';
         });
     }
 });

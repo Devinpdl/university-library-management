@@ -50,6 +50,19 @@ switch ($action) {
         }
         break;
         
+    case 'monthly_issues':
+        if ($auth->isLoggedIn()) {
+            $monthlyData = $report->getMonthlyIssues();
+            echo json_encode([
+                'success' => true,
+                'months' => array_column($monthlyData, 'month'),
+                'counts' => array_column($monthlyData, 'count')
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+        }
+        break;
+
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
 }

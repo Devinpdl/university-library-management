@@ -1,53 +1,99 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - University Library</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <title>Login - Library Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4e73df 0%, #36b9cc 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            padding: 2rem;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            border: 1px solid #e0e3e7;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        .btn-primary {
+            background: #4e73df;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #2e50bc;
+            transform: translateY(-1px);
+        }
+        .login-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .form-label {
+            color: #6c757d;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-    <div id="loginScreen" class="login-container">
+    <div class="login-container">
         <div class="login-card">
-            <div class="login-header">
-                <i class="fas fa-book-open fa-3x text-primary mb-3"></i>
-                <h2>Library Management</h2>
-                <p>University Central Library System</p>
-            </div>
-            
-            <form id="loginForm" onsubmit="handleLogin(event)" method="post">
-                <div class="form-group">
-                    <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
+            <h2 class="login-title">Library Management System</h2>
+            <?php if (isset($_SESSION['login_error'])): ?>
+                <div class="alert alert-danger mb-3">
+                    <?php echo htmlspecialchars($_SESSION['login_error']); ?>
+                    <?php unset($_SESSION['login_error']); ?>
                 </div>
-                
-                <div class="form-group">
-                    <label for="password"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+            <?php endif; ?>
+            <form action="api/auth.php?action=login" method="POST">
+                <div class="mb-3">
+                    <label for="userType" class="form-label">User Type</label>
+                    <select class="form-control" name="userType" required>
+                        <option value="admin">Admin</option>
+                        <option value="librarian">Librarian</option>
+                        <option value="student">Student</option>
+                    </select>
                 </div>
-                
-                <button type="submit" class="btn btn-primary btn-block" id="loginButton">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
-            
-            <div class="mt-4 text-center">
-                <small class="text-muted">
-                    Demo Credentials:<br>
-                    Admin: admin@university.edu / admin123<br>
-                    Librarian: librarian@university.edu / lib123<br>
-                    Student: alice@university.edu / student123
-                </small>
-            </div>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

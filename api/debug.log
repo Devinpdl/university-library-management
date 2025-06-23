@@ -1,0 +1,67 @@
+2025-06-21 15:18:44: Array
+(
+    [action] => 
+    [post] => Array
+        (
+            [email] => admin@university.edu
+            [password] => admin123
+            [userType] => admin
+        )
+
+    [get] => Array
+        (
+        )
+
+)
+
+2025-06-21 15:19:03: Array
+(
+    [action] => login
+    [post] => Array
+        (
+            [email] => admin@university.edu
+            [password] => admin123
+            [userType] => admin
+            [action] => login
+        )
+
+    [get] => Array
+        (
+        )
+
+)
+
+2025-06-21 15:19:06: Array
+(
+    [action] => login
+    [post] => Array
+        (
+            [email] => admin@university.edu
+            [password] => admin123
+            [userType] => admin
+            [action] => login
+        )
+
+    [get] => Array
+        (
+        )
+
+)
+
+2025-06-21 15:19:08: Array
+(
+    [action] => login
+    [post] => Array
+        (
+            [email] => admin@university.edu
+            [password] => admin123
+            [userType] => admin
+            [action] => login
+        )
+
+    [get] => Array
+        (
+        )
+
+)
+

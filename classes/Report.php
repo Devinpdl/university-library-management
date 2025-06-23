@@ -81,5 +81,18 @@ class Report {
         $stmt->execute([$limit, $offset]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getMonthlyIssues() {
+        $stmt = $this->db->query("
+            SELECT 
+                DATE_FORMAT(issue_date, '%Y-%m') as month,
+                COUNT(*) as count
+            FROM book_issues
+            WHERE issue_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+            GROUP BY DATE_FORMAT(issue_date, '%Y-%m')
+            ORDER BY month ASC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>

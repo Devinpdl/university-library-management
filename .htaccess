@@ -11,7 +11,24 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-# Route all requests to index.php except for static assets
+# Allow direct access to API endpoints
+RewriteRule ^api/ - [L]
+
+# Allow direct access to assets
+RewriteRule ^assets/ - [L]
+
+# Route all requests to index.php except for files and directories that exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Allow direct access to API endpoints
+RewriteRule ^api/ - [L]
+
+# Allow direct access to assets
+RewriteRule ^assets/ - [L]
+
+# Route remaining requests to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]

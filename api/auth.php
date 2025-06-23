@@ -1,35 +1,45 @@
 <?php
-header('Content-Type: application/json');
+session_start();
 require_once __DIR__ . '/../classes/Auth.php';
 
 $auth = new Auth();
-$action = $_GET['action'] ?? '';
+$action = isset($_GET['action']) ? $_GET['action'] : '';
 
-switch ($action) {
+switch($action) {
     case 'login':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = $_POST['email'] ?? '';
+            $username = $_POST['username'] ?? '';
             $password = $_POST['password'] ?? '';
-            echo json_encode($auth->login($email, $password));
+            
+            $result = $auth->login($username, $password);
+            
+            if ($result['success']) {
+                header('Location: /university-library-management/');
+                exit();
+            } else {
+                $_SESSION['login_error'] = $result['message'];
+                header('Location: /university-library-management/');
+                exit();
+            }
         }
         break;
-        
+
     case 'logout':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            echo json_encode($auth->logout());
+        $_SESSION = array();
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
         }
+        session_destroy();
+        header('Location: /university-library-management/login');
+        exit();
         break;
-        
-    case 'check':
-        $user = $auth->getCurrentUser();
-        if ($user) {
-            echo json_encode(['success' => true, 'user' => $user]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
-        }
-        break;
-        
+
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
+        break;
 }
 ?>
